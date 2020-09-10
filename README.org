@@ -1,7 +1,7 @@
 #+TITLE:      Incidente viales
 #+AUTHOR:     unloquer
 #+EMAIL:      unloquer@gmail.com
-#+OPTIONS:    H:3 num:nil toc:t \n:nil ::t |:t ^:t -:t f:t *:t tex:t d:(HIDE) tags:not-in-toc
+#+OPTIONS:    H:1 num:nil toc:t \n:nil ::t |:t ^:t -:t f:t *:t tex:t d:(HIDE) tags:not-in-toc
 #+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
 #+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w) | DONE(d) CANCELED(c) FAIL(f@) ABANDONED(a@)
 #+TAGS:       Write(w) Update(u) Fix(f) Check(c) 
@@ -21,7 +21,7 @@
  manera es posible leer el archivo de datos sin equívocos que puedan ser generados por
  suposiciones sobre los datos.
 
-* Visualización de los datos en un mapa
+* Visualización de los datos en un mapa usando R
 #+BEGIN_SRC R :exports code
 library(tidyverse)
 library(readxl)
@@ -51,7 +51,7 @@ library(leaflet)
 | base      |
 
 
- PROCESA DIRECTAMENTE DESDE URL ARCHIVO EXCELL #
+** PROCESA DIRECTAMENTE DESDE URL ARCHIVO EXCELL 
 
 
 #+BEGIN_SRC R :exports code
@@ -69,24 +69,23 @@ close(zz)
  Lee archivo de excel como datos tabulares
 #+BEGIN_SRC R :exports code
 tdata <- read_excel(path = excel_file,1)
-colnames(tdata) <- as.character(tdata[2,])  Asigna nombres de columnas
-tdata <- tdata[-c(1,2),]  Elimina filas adicionales sin información
+colnames(tdata) <- as.character(tdata[2,]) ## Asigna nombres de columnas
+tdata <- tdata[-c(1,2),] ## Elimina filas adicionales sin información
 #+END_SRC
  
 
 
-# LECTURA DE ARCHIVO CSV PROCESADO MANUALMENTE  
-# A PARTIR DEL ARCHIVO DE EXCELL #
+** LECTURA DE ARCHIVO CSV PROCESADO MANUALMENTE  A PARTIR DEL ARCHIVO DE EXCELL 
 #+BEGIN_SRC R :exports code
 tdata <- read_tsv("./data/iv_2020_120.csv")
 #+END_SRC
-# Resumen de algunas columnas
+Resumen de algunas columnas
 #+BEGIN_SRC R :exports code
 tdata %>% group_by(lubridate::month(FechaIncidente)) %>% summarise(n())
 tdata %>% group_by(`Dirección`) %>% summarise(cnt=n()) %>% arrange(desc(cnt))
 #+END_SRC
 
-# PROCESO DE GEOCODIFICACIÓN A PARTIR DE DIRECCIÓN #
+** PROCESO DE GEOCODIFICACIÓN A PARTIR DE DIRECCIÓN 
 
  3. Geocoder de OSM (nominatim) -> https://nominatim.org/ https://nominatim.openstreetmap.org/ui/search.html
  formato nominatim:
@@ -105,7 +104,7 @@ tdata$osm_search_term <- tdata$`Dirección` %>%
  API query -> https://nominatim.org/release-docs/develop/api/Search/
 nominatim_q_template <- "https://nominatim.openstreetmap.org/search.php?q=%s&format=json&limit=1"
 #+END_SRC
- Hacer map de los todos los elementos y retornar lat y lon
+** Hacer map de los todos los elementos y retornar lat y lon
 
 #+BEGIN_SRC R :exports code
 geocoding <- map(sprintf(nominatim_q_template,tdata$osm_search_term), function(q) {
@@ -125,7 +124,7 @@ tdata[geocoding$name,c("lat","lon")] <- map_df(geocoding$value,`[`,c(1,2))
 
 #+RESULTS:
 
- Pinta mapa
+** Pinta mapa
 
 #+BEGIN_SRC R :exports code
 options(browser="/usr/bin/brave")

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
-<!-- 2020-09-10 Thu 17:25 -->
+<!-- 2020-09-10 Thu 17:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Incidente viales</title>
@@ -247,19 +247,15 @@ for the JavaScript code in this tag.
 <h2>&Iacute;ndice</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org939974f">Recomendaciones</a></li>
-<li><a href="#org3452211">Visualización de los datos en un mapa</a>
-<ul>
-<li><a href="#org00c34a7">Otra opciones para geocodificar las direcciones</a></li>
-</ul>
-</li>
+<li><a href="#org08993f1">Recomendaciones</a></li>
+<li><a href="#org1c9e8da">Visualización de los datos en un mapa usando R</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org939974f" class="outline-2">
-<h2 id="org939974f">Recomendaciones</h2>
-<div class="outline-text-2" id="text-org939974f">
+<div id="outline-container-org08993f1" class="outline-2">
+<h2 id="org08993f1">Recomendaciones</h2>
+<div class="outline-text-2" id="text-org08993f1">
 <ul class="org-ul">
 <li>El procesamiento del archivo original en formato excell no es muy cómodo.</li>
 <li>Al no existir metadatos es necesario suponer los tipo de las columnas.</li>
@@ -274,9 +270,9 @@ suposiciones sobre los datos.</li>
 </div>
 </div>
 
-<div id="outline-container-org3452211" class="outline-2">
-<h2 id="org3452211">Visualización de los datos en un mapa</h2>
-<div class="outline-text-2" id="text-org3452211">
+<div id="outline-container-org1c9e8da" class="outline-2">
+<h2 id="org1c9e8da">Visualización de los datos en un mapa usando R</h2>
+<div class="outline-text-2" id="text-org1c9e8da">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #a2cd5a;">library</span><span style="color: #eaeaea;">(</span>tidyverse<span style="color: #eaeaea;">)</span>
 <span style="color: #a2cd5a;">library</span><span style="color: #eaeaea;">(</span>readxl<span style="color: #eaeaea;">)</span>
@@ -284,13 +280,12 @@ suposiciones sobre los datos.</li>
 <span style="color: #a2cd5a;">library</span><span style="color: #eaeaea;">(</span>leaflet<span style="color: #eaeaea;">)</span>
 </pre>
 </div>
+</div>
 
 
-<p>
-PROCESA DIRECTAMENTE DESDE URL ARCHIVO EXCELL #
-</p>
-
-
+<ul class="org-ul">
+<li><a id="orga8bd930"></a>PROCESA DIRECTAMENTE DESDE URL ARCHIVO EXCELL<br />
+<div class="outline-text-3" id="text-orga8bd930">
 <div class="org-src-container">
 <pre class="src src-R">binary_data <span style="color: #a2cd5a;">&lt;-</span> GET<span style="color: #eaeaea;">(</span><span style="color: #deb887;">"https://www.medellin.gov.co/movilidad/cifras-estudios/finish/3902-cifras-de-incidentalidad-diaria/334375-victimas-fatales-por-incidentes-viales-2020"</span><span style="color: #eaeaea;">)</span> <span style="color: #a2cd5a;">%&gt;%</span> httr::content<span style="color: #eaeaea;">()</span>
 </pre>
@@ -312,24 +307,34 @@ Lee archivo de excel como datos tabulares
 </p>
 <div class="org-src-container">
 <pre class="src src-R">tdata <span style="color: #a2cd5a;">&lt;-</span> read_excel<span style="color: #eaeaea;">(</span>path = excel_file,<span style="color: #a2cd5a;">1</span><span style="color: #eaeaea;">)</span>
-colnames<span style="color: #eaeaea;">(</span>tdata<span style="color: #eaeaea;">)</span> <span style="color: #a2cd5a;">&lt;-</span> as.character<span style="color: #eaeaea;">(</span>tdata<span style="color: #70c0b1;">[</span><span style="color: #a2cd5a;">2</span>,<span style="color: #70c0b1;">]</span><span style="color: #eaeaea;">)</span>  Asigna nombres de columnas
-tdata <span style="color: #a2cd5a;">&lt;-</span> tdata<span style="color: #eaeaea;">[</span>-c<span style="color: #70c0b1;">(</span><span style="color: #a2cd5a;">1</span>,<span style="color: #a2cd5a;">2</span><span style="color: #70c0b1;">)</span>,<span style="color: #eaeaea;">]</span>  Elimina filas adicionales sin informaci&#243;n
+colnames<span style="color: #eaeaea;">(</span>tdata<span style="color: #eaeaea;">)</span> <span style="color: #a2cd5a;">&lt;-</span> as.character<span style="color: #eaeaea;">(</span>tdata<span style="color: #70c0b1;">[</span><span style="color: #a2cd5a;">2</span>,<span style="color: #70c0b1;">]</span><span style="color: #eaeaea;">)</span> <span style="color: #969896;">## </span><span style="color: #969896;">Asigna nombres de columnas</span>
+tdata <span style="color: #a2cd5a;">&lt;-</span> tdata<span style="color: #eaeaea;">[</span>-c<span style="color: #70c0b1;">(</span><span style="color: #a2cd5a;">1</span>,<span style="color: #a2cd5a;">2</span><span style="color: #70c0b1;">)</span>,<span style="color: #eaeaea;">]</span> <span style="color: #969896;">## </span><span style="color: #969896;">Elimina filas adicionales sin informaci&#243;n</span>
 </pre>
 </div>
+</div>
+</li>
 
 
 
+<li><a id="orgb1db288"></a>LECTURA DE ARCHIVO CSV PROCESADO MANUALMENTE  A PARTIR DEL ARCHIVO DE EXCELL<br />
+<div class="outline-text-3" id="text-orgb1db288">
 <div class="org-src-container">
 <pre class="src src-R">tdata <span style="color: #a2cd5a;">&lt;-</span> read_tsv<span style="color: #eaeaea;">(</span><span style="color: #deb887;">"./data/iv_2020_120.csv"</span><span style="color: #eaeaea;">)</span>
 </pre>
 </div>
-
+<p>
+Resumen de algunas columnas
+</p>
 <div class="org-src-container">
 <pre class="src src-R">tdata <span style="color: #a2cd5a;">%&gt;%</span> group_by<span style="color: #eaeaea;">(</span>lubridate::month<span style="color: #70c0b1;">(</span>FechaIncidente<span style="color: #70c0b1;">)</span><span style="color: #eaeaea;">)</span> <span style="color: #a2cd5a;">%&gt;%</span> summarise<span style="color: #eaeaea;">(</span>n<span style="color: #70c0b1;">()</span><span style="color: #eaeaea;">)</span>
 tdata <span style="color: #a2cd5a;">%&gt;%</span> group_by<span style="color: #eaeaea;">(</span><span style="color: #eaeaea; background-color: #181a26;">`Direcci&#243;n`</span><span style="color: #eaeaea;">)</span> <span style="color: #a2cd5a;">%&gt;%</span> summarise<span style="color: #eaeaea;">(</span>cnt=n<span style="color: #70c0b1;">()</span><span style="color: #eaeaea;">)</span> <span style="color: #a2cd5a;">%&gt;%</span> arrange<span style="color: #eaeaea;">(</span>desc<span style="color: #70c0b1;">(</span>cnt<span style="color: #70c0b1;">)</span><span style="color: #eaeaea;">)</span>
 </pre>
 </div>
+</div>
+</li>
 
+<li><a id="org40a557e"></a>PROCESO DE GEOCODIFICACIÓN A PARTIR DE DIRECCIÓN<br />
+<div class="outline-text-3" id="text-org40a557e">
 <ol class="org-ol">
 <li>Geocoder de OSM (nominatim) -&gt; <a href="https://nominatim.org/">https://nominatim.org/</a> <a href="https://nominatim.openstreetmap.org/ui/search.html">https://nominatim.openstreetmap.org/ui/search.html</a></li>
 </ol>
@@ -352,10 +357,10 @@ tdata$osm_search_term <span style="color: #a2cd5a;">&lt;-</span> tdata$<span sty
 nominatim_q_template <span style="color: #a2cd5a;">&lt;-</span> <span style="color: #deb887;">"https://nominatim.openstreetmap.org/search.php?q=%s&amp;format=json&amp;limit=1"</span>
 </pre>
 </div>
-<p>
-Hacer map de los todos los elementos y retornar lat y lon
-</p>
-
+</div>
+</li>
+<li><a id="orgdc4dd7f"></a>Hacer map de los todos los elementos y retornar lat y lon<br />
+<div class="outline-text-3" id="text-orgdc4dd7f">
 <div class="org-src-container">
 <pre class="src src-R">geocoding <span style="color: #a2cd5a;">&lt;-</span> map<span style="color: #eaeaea;">(</span>sprintf<span style="color: #70c0b1;">(</span>nominatim_q_template,tdata$osm_search_term<span style="color: #70c0b1;">)</span>, <span style="color: #00bfff;">function</span><span style="color: #70c0b1;">(</span>q<span style="color: #70c0b1;">)</span> <span style="color: #70c0b1;">{</span>
     r <span style="color: #a2cd5a;">&lt;-</span> GET<span style="color: #e7c547;">(</span>q<span style="color: #e7c547;">)</span> <span style="color: #a2cd5a;">%&gt;%</span> httr::content<span style="color: #e7c547;">()</span> <span style="color: #a2cd5a;">%&gt;%</span> map<span style="color: #e7c547;">(</span><span style="color: #00bfff;">function</span><span style="color: #a2cd5a;">(</span>s<span style="color: #a2cd5a;">)</span> <span style="color: #a2cd5a;">{</span>
@@ -372,11 +377,11 @@ tdata$lon <span style="color: #a2cd5a;">&lt;-</span> <span style="color: #deb887
 tdata<span style="color: #eaeaea;">[</span>geocoding$name,c<span style="color: #70c0b1;">(</span><span style="color: #deb887;">"lat"</span>,<span style="color: #deb887;">"lon"</span><span style="color: #70c0b1;">)</span><span style="color: #eaeaea;">]</span> <span style="color: #a2cd5a;">&lt;-</span> map_df<span style="color: #eaeaea;">(</span>geocoding$value,<span style="color: #eaeaea; background-color: #181a26;">`[`</span>,c<span style="color: #70c0b1;">(</span><span style="color: #a2cd5a;">1</span>,<span style="color: #a2cd5a;">2</span><span style="color: #70c0b1;">)</span><span style="color: #eaeaea;">)</span>
 </pre>
 </div>
+</div>
+</li>
 
-<p>
-Pinta mapa
-</p>
-
+<li><a id="org82df4a3"></a>Pinta mapa<br />
+<div class="outline-text-3" id="text-org82df4a3">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #a2cd5a;">options</span><span style="color: #eaeaea;">(</span>browser=<span style="color: #deb887;">"/usr/bin/brave"</span><span style="color: #eaeaea;">)</span>
 
@@ -387,18 +392,18 @@ leaflet<span style="color: #eaeaea;">(</span>tdata<span style="color: #eaeaea;">
 </div>
 
 
-<div id="org1ded2ce" class="figure">
+<div id="org62681e8" class="figure">
 <p><img src="./assets/mapa.png" alt="mapa.png" />
 </p>
 <p><span class="figure-number">Figura 1: </span>Mapa con Incidentes Viales</p>
 </div>
 </div>
+</li>
 
 
 
-<div id="outline-container-org00c34a7" class="outline-3">
-<h3 id="org00c34a7">Otra opciones para geocodificar las direcciones</h3>
-<div class="outline-text-3" id="text-org00c34a7">
+<li><a id="org05b6cd5"></a>Otra opciones para geocodificar las direcciones<br />
+<div class="outline-text-3" id="text-org05b6cd5">
 <ol class="org-ol">
 <li>Geocoder de la Alcaldía -&gt; <a href="https://www.medellin.gov.co/MAPGISV5_WEB/mapa.jsp?aplicacion=0">https://www.medellin.gov.co/MAPGISV5_WEB/mapa.jsp?aplicacion=0</a></li>
 </ol>
@@ -414,12 +419,13 @@ leaflet<span style="color: #eaeaea;">(</span>tdata<span style="color: #eaeaea;">
 <li>Geocoder de google</li>
 </ol>
 </div>
-</div>
+</li>
+</ul>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Autor: unloquer</p>
-<p class="date">Created: 2020-09-10 Thu 17:25</p>
+<p class="date">Created: 2020-09-10 Thu 17:55</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
