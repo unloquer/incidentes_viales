@@ -31,7 +31,7 @@ tdata <- tdata[-c(1,2),] ## Elimina filas adicionales sin información
 ##################### LECTURA DE ARCHIVO CSV PROCESADO MANUALMENTE  ##################
 ########################### A PARTIR DEL ARCHIVO DE EXCELL ###########################
 ######################################################################################
-tdata <- read_tsv("./tdata/iv_2020_120.csv")
+tdata <- read_tsv("./data/iv_2020_120.csv")
 
 # Resumen de algunas columnas
 tdata %>% group_by(lubridate::month(FechaIncidente)) %>% summarise(n())
